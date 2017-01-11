@@ -11,15 +11,22 @@ assignments.one = function(){
   //There's a problem with this function
   var buttons = $('button');
 
+  var buttonAlert = function(num) {
+    return function(){
+      $('#clicked-btn').text('You clicked button #' + num)
+    };
+  }
+
   // No matter what I click, it always picks the same element
   // could it be CLOSURES???
   for (var i = 0; i < buttons.length; i++) {
 
     // somehow, i is always the same value
-     $(buttons[i]).on('click', function() {
-        $('#clicked-btn').text('You clicked button #' + i);
-     });
-  }
+
+    // NOTE assignments.one's closure stored the latest version of i (which was 4 after running the for loop)
+    $(buttons[i]).on('click', buttonAlert(i));
+  };
+
 
 
 }
@@ -40,9 +47,10 @@ assignments.two = function(){
                           this.mood = "sad.";
                           $('#mood').text(this.mood);
 
-                          //So what goes wrong here?
+                          // NOTE setTimeout's scope is global so it was reassigning mood on the window and not on viking
+                          var self = this;
                           setTimeout( (function() {
-                            this.mood = "Happy!";
+                            self.mood = "Happy!";
 
                             //THIS even runs correctly!
                             //What is UP with this? :(
